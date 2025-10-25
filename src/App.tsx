@@ -60,7 +60,7 @@ function App() {
   });
 
   const handlePatientDataChange = (field: keyof PatientData, value: string) => {
-    setPatientData(prev => ({ ...prev, [field]: value }));
+    setPatientData(prev => ({ ...prev, [field]: value.toUpperCase() }));
   };
 
   const handleVitalSignsChange = (field: keyof VitalSigns, value: string) => {
@@ -181,7 +181,14 @@ function App() {
                         placeholder="Cédula o documento"
                         value={patientData.identificacion}
                         onChange={(e) => handlePatientDataChange('identificacion', e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            document.querySelector<HTMLInputElement>('input[name="nombre"]')?.focus();
+                          }
+                        }}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        name="identificacion"
                         required
                       />
                     </div>
@@ -195,7 +202,14 @@ function App() {
                         placeholder="Nombre completo"
                         value={patientData.nombre}
                         onChange={(e) => handlePatientDataChange('nombre', e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            document.querySelector<HTMLInputElement>('input[name="edad"]')?.focus();
+                          }
+                        }}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        name="nombre"
                         required
                       />
                     </div>
@@ -210,7 +224,14 @@ function App() {
                           placeholder="Años"
                           value={patientData.edad}
                           onChange={(e) => handlePatientDataChange('edad', e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              document.querySelector<HTMLSelectElement>('select[name="sexo"]')?.focus();
+                            }
+                          }}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                          name="edad"
                           required
                         />
                       </div>
@@ -221,7 +242,14 @@ function App() {
                         <select
                           value={patientData.sexo}
                           onChange={(e) => handlePatientDataChange('sexo', e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              document.querySelector<HTMLSelectElement>('select[name="tipoSangre"]')?.focus();
+                            }
+                          }}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                          name="sexo"
                           required
                         >
                           <option value="">Seleccionar</option>
@@ -239,7 +267,14 @@ function App() {
                       <select
                         value={patientData.tipoSangre}
                         onChange={(e) => handlePatientDataChange('tipoSangre', e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            document.querySelector<HTMLInputElement>('input[name="alergias"]')?.focus();
+                          }
+                        }}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        name="tipoSangre"
                         required
                       >
                         <option value="">Seleccionar</option>
@@ -263,7 +298,14 @@ function App() {
                         placeholder="Medicamentos, alimentos, etc."
                         value={patientData.alergias}
                         onChange={(e) => handlePatientDataChange('alergias', e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            document.querySelector<HTMLInputElement>('input[name="enfermedadesBase"]')?.focus();
+                          }
+                        }}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        name="alergias"
                       />
                     </div>
 
@@ -276,7 +318,14 @@ function App() {
                         placeholder="Diabetes, hipertensión, etc."
                         value={patientData.enfermedadesBase}
                         onChange={(e) => handlePatientDataChange('enfermedadesBase', e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            document.querySelector<HTMLInputElement>('input[name="medicamentosActuales"]')?.focus();
+                          }
+                        }}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        name="enfermedadesBase"
                       />
                     </div>
 
@@ -289,7 +338,14 @@ function App() {
                         placeholder="Medicinas que consume regularmente"
                         value={patientData.medicamentosActuales}
                         onChange={(e) => handlePatientDataChange('medicamentosActuales', e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            document.querySelector<HTMLInputElement>('input[name="motivoConsulta"]')?.focus();
+                          }
+                        }}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        name="medicamentosActuales"
                       />
                     </div>
 
@@ -302,7 +358,14 @@ function App() {
                         placeholder="Síntomas o razón de la visita"
                         value={patientData.motivoConsulta}
                         onChange={(e) => handlePatientDataChange('motivoConsulta', e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            document.querySelector<HTMLInputElement>('input[name="acompanante"]')?.focus();
+                          }
+                        }}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        name="motivoConsulta"
                         required
                       />
                     </div>
@@ -317,6 +380,7 @@ function App() {
                         value={patientData.acompanante}
                         onChange={(e) => handlePatientDataChange('acompanante', e.target.value)}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        name="acompanante"
                       />
                     </div>
 
