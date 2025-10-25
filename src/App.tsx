@@ -158,34 +158,6 @@ function App() {
 
       <div className="flex-1 p-6">
         <div className="max-w-5xl mx-auto">
-          {/* Header with Logo */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6 flex items-center justify-between relative">
-            <div className="flex items-center gap-4">
-              <div className="bg-red-600 rounded-lg p-3">
-                <FileText className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-800">
-                  {activeTab === 'registro' ? 'Registro del Paciente' : 'Evaluación de Signos Vitales'}
-                </h1>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <img
-                src="/public/ChatGPT Image 24 oct 2025, 14_05_26.png"
-                alt="SAVISER Logo"
-                className="h-16 w-auto"
-              />
-            </div>
-
-            {/* Menu button in top-left corner */}
-            <button
-              onClick={() => setIsMenuOpen(true)}
-              className="absolute -top-3 -left-3 bg-teal-600 hover:bg-teal-700 rounded-lg p-3 shadow-lg transition-all hover:scale-110"
-            >
-              <Menu className="w-6 h-6 text-white" />
-            </button>
-          </div>
 
 
           {/* Content */}
