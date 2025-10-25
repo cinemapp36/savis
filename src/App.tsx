@@ -187,40 +187,6 @@ function App() {
             </button>
           </div>
 
-          {/* Tabs */}
-          <div className="flex gap-2 mb-6">
-            <button
-              onClick={() => setActiveTab('registro')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
-                activeTab === 'registro'
-                  ? 'bg-red-600 text-white shadow-lg'
-                  : 'bg-white text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              <FileText className="w-5 h-5" />
-              Registro del Paciente
-            </button>
-            <button
-              onClick={() => {
-                if (!isFormValid()) {
-                  alert('Por favor complete todos los campos obligatorios del registro antes de acceder a Signos Vitales.');
-                  return;
-                }
-                setActiveTab('signos');
-              }}
-              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
-                activeTab === 'signos'
-                  ? 'bg-red-600 text-white shadow-lg'
-                  : !isFormValid()
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-white text-gray-600 hover:bg-gray-50'
-              }`}
-              disabled={!isFormValid()}
-            >
-              <Activity className="w-5 h-5" />
-              Signos Vitales
-            </button>
-          </div>
 
           {/* Content */}
           <div className="bg-white rounded-lg shadow-md p-8">
