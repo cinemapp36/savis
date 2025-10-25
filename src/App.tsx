@@ -142,20 +142,8 @@ function App() {
               <span className="font-medium">Inicio</span>
             </button>
             <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/20 rounded-lg transition-colors">
-              <Users className="w-5 h-5" />
-              <span className="font-medium">Pacientes</span>
-            </button>
-            <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/20 rounded-lg transition-colors">
-              <Calendar className="w-5 h-5" />
-              <span className="font-medium">Citas</span>
-            </button>
-            <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/20 rounded-lg transition-colors">
-              <Activity className="w-5 h-5" />
-              <span className="font-medium">Signos Vitales</span>
-            </button>
-            <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/20 rounded-lg transition-colors">
-              <Settings className="w-5 h-5" />
-              <span className="font-medium">Configuración</span>
+              <FileText className="w-5 h-5" />
+              <span className="font-medium">Registro del Paciente</span>
             </button>
           </nav>
 
@@ -180,9 +168,6 @@ function App() {
                 <h1 className="text-2xl font-bold text-gray-800">
                   {activeTab === 'registro' ? 'Registro del Paciente' : 'Evaluación de Signos Vitales'}
                 </h1>
-                <p className="text-sm text-gray-600">
-                  {activeTab === 'registro' ? 'Pantalla 1 - Datos del paciente' : 'Pantalla 2 - Signos vitales clínicos'}
-                </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
