@@ -192,10 +192,6 @@ function App() {
           <div className="bg-white rounded-lg shadow-md p-8">
             {activeTab === 'registro' ? (
               <div>
-                <div className="border-l-4 border-red-600 pl-4 mb-6">
-                  <h2 className="text-xl font-bold text-gray-800 uppercase">Datos del Paciente</h2>
-                </div>
-
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 gap-4">
                     <div>
