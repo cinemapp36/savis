@@ -156,10 +156,16 @@ function App() {
         </div>
       </div>
 
+      {/* Menu button floating on the page */}
+      <button
+        onClick={() => setIsMenuOpen(true)}
+        className="fixed top-6 left-6 bg-teal-600 hover:bg-teal-700 rounded-lg p-3 shadow-lg transition-all hover:scale-110 z-30"
+      >
+        <Menu className="w-6 h-6 text-white" />
+      </button>
+
       <div className="flex-1 p-6">
         <div className="max-w-5xl mx-auto">
-
-
           {/* Content */}
           <div className="bg-white rounded-lg shadow-md p-8">
             {activeTab === 'registro' ? (
