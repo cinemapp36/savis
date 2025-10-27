@@ -66,6 +66,10 @@ function Registro() {
     navigate('/signos');
   };
 
+  const handleBack = () => {
+    navigate('/');
+  };
+
   return (
     <div>
       <div className="border-l-4 border-red-600 pl-4 mb-6">
@@ -300,6 +304,12 @@ function Registro() {
         </div>
 
         <div className="flex justify-end pt-4">
+          <button
+            onClick={handleBack}
+            className="bg-gray-200 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors mr-4"
+          >
+            Volver al Inicio
+          </button>
           <p className="text-sm text-gray-600 mr-4 flex items-center">
             <span className="text-red-600 mr-1">*</span> Campos obligatorios
           </p>

@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { FileText, Menu, X, Home } from 'lucide-react';
+import Inicio from './pages/Inicio';
 import Registro from './pages/Registro';
 import Signos from './pages/Signos';
 import Resultado from './pages/Resultado';
+import BuscarPacientes from './pages/BuscarPacientes';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -41,13 +43,35 @@ function App() {
             </div>
 
             <nav className="space-y-2">
-              <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/20 rounded-lg transition-colors">
+              <button 
+                onClick={() => {
+                  window.location.href = '/';
+                  setIsMenuOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/20 rounded-lg transition-colors"
+              >
                 <Home className="w-5 h-5" />
                 <span className="font-medium">Inicio</span>
               </button>
-              <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/20 rounded-lg transition-colors">
+              <button 
+                onClick={() => {
+                  window.location.href = '/registro';
+                  setIsMenuOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/20 rounded-lg transition-colors"
+              >
                 <FileText className="w-5 h-5" />
                 <span className="font-medium">Registro del Paciente</span>
+              </button>
+              <button 
+                onClick={() => {
+                  window.location.href = '/buscar';
+                  setIsMenuOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/20 rounded-lg transition-colors"
+              >
+                <Search className="w-5 h-5" />
+                <span className="font-medium">Buscar Pacientes</span>
               </button>
             </nav>
 
@@ -73,9 +97,11 @@ function App() {
             {/* Content */}
             <div className="bg-white rounded-lg shadow-md p-8">
               <Routes>
-                <Route path="/" element={<Registro />} />
+                <Route path="/" element={<Inicio />} />
+                <Route path="/registro" element={<Registro />} />
                 <Route path="/signos" element={<Signos />} />
                 <Route path="/resultado" element={<Resultado />} />
+                <Route path="/buscar" element={<BuscarPacientes />} />
               </Routes>
             </div>
 
