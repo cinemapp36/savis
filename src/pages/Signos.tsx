@@ -128,6 +128,11 @@ function Signos() {
       evaluationDate: new Date().toLocaleString('es-CO')
     };
     localStorage.setItem('lastEvaluation', JSON.stringify(completeRecord));
+    
+    // Navigate to results page after evaluation
+    setTimeout(() => {
+      navigate('/resultado');
+    }, 2000); // Wait 2 seconds to show the result, then navigate
   };
 
   if (!patientData) {

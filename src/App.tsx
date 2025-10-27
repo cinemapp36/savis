@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { FileText, Menu, X, Home } from 'lucide-react';
 import Registro from './pages/Registro';
 import Signos from './pages/Signos';
+import Resultado from './pages/Resultado';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -74,6 +75,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Registro />} />
                 <Route path="/signos" element={<Signos />} />
+                <Route path="/resultado" element={<Resultado />} />
               </Routes>
             </div>
 
