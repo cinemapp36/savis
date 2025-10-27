@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Download, CheckCircle, User, Calendar, Heart } from 'lucide-react';
+import { FileText, Download, CheckCircle, User, Calendar, Heart, Activity } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -121,34 +121,230 @@ function Resultado() {
     setIsGeneratingPDF(true);
     
     try {
-      const element = document.getElementById('evaluation-summary');
-      if (!element) return;
-
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff'
-      });
-
-      const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const margin = 20;
+      const contentWidth = pageWidth - (margin * 2);
       
-      const imgWidth = 210;
-      const pageHeight = 295;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+      // Add watermark background
+      pdf.setGState(pdf.GState({opacity: 0.1}));
+      pdf.setFontSize(60);
+      pdf.setTextColor(150, 150, 150);
+      pdf.text('SAVISER', pageWidth/2, pageHeight/2, {align: 'center', angle: 45});
+      pdf.setGState(pdf.GState({opacity: 1}));
+      
+      // Header with logo and clinic info
+      const currentDate = new Date().toLocaleDateString('es-CO');
+      const currentTime = new Date().toLocaleTimeString('es-CO', {hour12: false});
+      
+      pdf.setFontSize(10);
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(`${currentDate}. ${currentTime}`, margin, 15);
+      pdf.text('Sistema SAVISER v1.0', pageWidth - margin, 15, {align: 'right'});
+      
+      // Main title
+      pdf.setFontSize(18);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('SISTEMA SAVISER', pageWidth/2, 35, {align: 'center'});
+      
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('Sistema de Clasificación de Triage', pageWidth/2, 42, {align: 'center'});
+      pdf.text('Registro Médico Electrónico', pageWidth/2, 48, {align: 'center'});
+      
+      // Horizontal line
+      pdf.setLineWidth(0.5);
+      pdf.line(margin, 55, pageWidth - margin, 55);
+      
+      let yPosition = 70;
+      
+      // Triage Classification - Prominent display
+      const triageInfo = getTriageInfo(evaluationRecord.triageResult);
+      pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('CLASIFICACIÓN TRIAGE', margin, yPosition);
+      
+      // Triage level box
+      pdf.setFillColor(240, 240, 240);
+      pdf.rect(margin, yPosition + 5, contentWidth, 25, 'F');
+      pdf.setFontSize(24);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(`NIVEL ${triageInfo.level}`, margin + 10, yPosition + 18);
+      pdf.setFontSize(12);
+      pdf.text(`${triageInfo.name}`, margin + 60, yPosition + 18);
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(`${triageInfo.priority}`, margin + 10, yPosition + 25);
+      
+      yPosition += 40;
+      
+      // Dashed line separator
+      pdf.setLineDashPattern([2, 2], 0);
+      pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+      pdf.setLineDashPattern([], 0);
+      
+      yPosition += 10;
+      
+      // DATOS PERSONALES section
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('DATOS PERSONALES', margin, yPosition);
+      yPosition += 8;
+      
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      
+      const personalData = [
+        ['Paciente:', evaluationRecord.patientData.nombre],
+        ['Identificación:', evaluationRecord.patientData.identificacion],
+        ['Edad:', `${evaluationRecord.patientData.edad} años`],
+        ['Sexo:', evaluationRecord.patientData.sexo],
+        ['Tipo de Sangre:', evaluationRecord.patientData.tipoSangre],
+        ['Acompañante:', evaluationRecord.patientData.acompanante || 'N/A']
+      ];
+      
+      personalData.forEach(([label, value]) => {
+        pdf.text(label, margin, yPosition);
+        pdf.text(value, margin + 40, yPosition);
+        yPosition += 6;
+      });
+      
+      yPosition += 5;
+      
+      // Dashed line separator
+      pdf.setLineDashPattern([2, 2], 0);
+      pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+      pdf.setLineDashPattern([], 0);
+      
+      yPosition += 10;
+      
+      // I. DATOS DE INGRESO
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('I. DATOS DE INGRESO', margin, yPosition);
+      yPosition += 8;
+      
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('Motivo de Ingreso:', margin, yPosition);
+      yPosition += 6;
+      pdf.text(evaluationRecord.patientData.motivoConsulta, margin + 5, yPosition);
+      yPosition += 10;
+      
+      // II. ANTECEDENTES
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('II. ANTECEDENTES', margin, yPosition);
+      yPosition += 8;
+      
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      
+      if (evaluationRecord.patientData.alergias) {
+        pdf.text('Alergias:', margin, yPosition);
+        pdf.text(evaluationRecord.patientData.alergias, margin + 25, yPosition);
+        yPosition += 6;
       }
+      
+      pdf.text('ANTECEDENTES PERSONALES PATOLÓGICOS', margin, yPosition);
+      yPosition += 6;
+      
+      if (evaluationRecord.patientData.enfermedadesBase) {
+        pdf.text(evaluationRecord.patientData.enfermedadesBase, margin + 5, yPosition);
+        yPosition += 6;
+      }
+      
+      if (evaluationRecord.patientData.medicamentosActuales) {
+        pdf.text('Medicamentos Actuales:', margin, yPosition);
+        pdf.text(evaluationRecord.patientData.medicamentosActuales, margin + 5, yPosition + 6);
+        yPosition += 12;
+      }
+      
+      yPosition += 5;
+      
+      // Dashed line separator
+      pdf.setLineDashPattern([2, 2], 0);
+      pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+      pdf.setLineDashPattern([], 0);
+      
+      yPosition += 10;
+      
+      // III. SIGNOS VITALES
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('III. SIGNOS VITALES AL INGRESO', margin, yPosition);
+      yPosition += 8;
+      
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      
+      const vitalSigns = [
+        ['T.A', `${evaluationRecord.vitalSigns.presionSistolica}/${evaluationRecord.vitalSigns.presionDiastolica}`],
+        ['FC', evaluationRecord.vitalSigns.frecuenciaCardiaca],
+        ['FR', evaluationRecord.vitalSigns.frecuenciaRespiratoria],
+        ['T:', `${evaluationRecord.vitalSigns.temperatura}°C`],
+        ['SO₂', `${evaluationRecord.vitalSigns.saturacionO2}%`]
+      ];
+      
+      let xPos = margin;
+      vitalSigns.forEach(([label, value], index) => {
+        pdf.text(`${label} ${value}`, xPos, yPosition);
+        xPos += 35;
+        if (index === 2) {
+          xPos = margin;
+          yPosition += 6;
+        }
+      });
+      
+      yPosition += 15;
+      
+      // Dashed line separator
+      pdf.setLineDashPattern([2, 2], 0);
+      pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+      pdf.setLineDashPattern([], 0);
+      
+      yPosition += 10;
+      
+      // IV. EVALUACIÓN DE TRIAGE
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('IV. EVALUACIÓN DE TRIAGE', margin, yPosition);
+      yPosition += 8;
+      
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(`Clasificación: Nivel ${triageInfo.level} - ${triageInfo.name}`, margin, yPosition);
+      yPosition += 6;
+      pdf.text(`Tiempo máximo de espera: ${triageInfo.time}`, margin, yPosition);
+      yPosition += 6;
+      pdf.text(`Fecha de evaluación: ${evaluationRecord.evaluationDate}`, margin, yPosition);
+      
+      yPosition += 15;
+      
+      // Dashed line separator
+      pdf.setLineDashPattern([2, 2], 0);
+      pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+      pdf.setLineDashPattern([], 0);
+      
+      yPosition += 10;
+      
+      // V. OBSERVACIONES
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('V. OBSERVACIONES', margin, yPosition);
+      yPosition += 8;
+      
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('Evaluación realizada mediante Sistema SAVISER', margin, yPosition);
+      yPosition += 6;
+      pdf.text('Clasificación automática basada en signos vitales y protocolos médicos', margin, yPosition);
+      
+      // Footer
+      pdf.setFontSize(8);
+      pdf.setTextColor(100, 100, 100);
+      pdf.text('Sistema SAVISER - Registro generado automáticamente', pageWidth/2, pageHeight - 10, {align: 'center'});
 
       const fileName = `Triage_${evaluationRecord.patientData.nombre.replace(/\s+/g, '_')}_${evaluationRecord.patientData.identificacion}.pdf`;
       pdf.save(fileName);
