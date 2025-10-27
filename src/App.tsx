@@ -29,6 +29,7 @@ interface VitalSigns {
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('registro');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [triageResult, setTriageResult] = useState<string | null>(null);
   const [patientData, setPatientData] = useState<PatientData>({
     identificacion: '',
     nombre: '',
@@ -101,8 +102,57 @@ function App() {
     });
   };
 
+  const calculateTriage = (): string => {
+    const temp = parseFloat(vitalSigns.temperatura);
+    const sistolica = parseFloat(vitalSigns.presionSistolica);
+    const diastolica = parseFloat(vitalSigns.presionDiastolica);
+    const fc = parseFloat(vitalSigns.frecuenciaCardiaca);
+    const fr = parseFloat(vitalSigns.frecuenciaRespiratoria);
+    const o2 = parseFloat(vitalSigns.saturacionO2);
+
+    if (
+      temp > 40 || temp < 35 ||
+      sistolica > 180 || sistolica < 90 ||
+      fc > 120 || fc < 50 ||
+      o2 < 90
+    ) {
+      return 'I';
+    }
+
+    if (
+      temp > 39 || temp < 35.5 ||
+      sistolica > 160 || sistolica < 100 ||
+      fc > 110 || fc < 60 ||
+      fr > 24 || fr < 12 ||
+      o2 < 92
+    ) {
+      return 'II';
+    }
+
+    if (
+      temp > 38.5 ||
+      sistolica > 140 || sistolica < 110 ||
+      fc > 100 ||
+      fr > 22 || fr < 14 ||
+      o2 < 94
+    ) {
+      return 'III';
+    }
+
+    if (
+      temp > 37.5 ||
+      sistolica > 130 ||
+      fc > 90
+    ) {
+      return 'IV';
+    }
+
+    return 'V';
+  };
+
   const handleEvaluate = () => {
-    alert('Paciente evaluado correctamente');
+    const triage = calculateTriage();
+    setTriageResult(triage);
   };
 
   return (
@@ -513,6 +563,37 @@ function App() {
                       </span>
                     </div>
                   </div>
+
+                  {triageResult && (
+                    <div className="mt-6 p-6 bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-600 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-lg font-bold text-gray-800 mb-1">RESULTADO DEL TRIAGE</h3>
+                          <p className="text-sm text-gray-600">Clasificación del paciente</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="text-center">
+                            <div className={`text-6xl font-bold ${
+                              triageResult === 'I' ? 'text-red-700' :
+                              triageResult === 'II' ? 'text-orange-600' :
+                              triageResult === 'III' ? 'text-yellow-600' :
+                              triageResult === 'IV' ? 'text-green-600' :
+                              'text-blue-600'
+                            }`}>
+                              {triageResult}
+                            </div>
+                            <div className="text-xs font-semibold text-gray-600 mt-1">
+                              {triageResult === 'I' ? 'RESUCITACIÓN' :
+                               triageResult === 'II' ? 'EMERGENCIA' :
+                               triageResult === 'III' ? 'URGENCIA' :
+                               triageResult === 'IV' ? 'URGENCIA MENOR' :
+                               'NO URGENTE'}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="flex justify-between gap-4 pt-4">
                     <button
