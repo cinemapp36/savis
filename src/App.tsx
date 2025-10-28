@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { FileText, Menu, X, Home } from 'lucide-react';
+import { FileText, Menu, X, Home, Search } from 'lucide-react';
 import Inicio from './pages/Inicio';
 import Registro from './pages/Registro';
 import Signos from './pages/Signos';
