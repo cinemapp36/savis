@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, User, Calendar, FileText, Eye, Edit, Trash2, ExternalLink } from 'lucide-react';
+import { Search, User, Calendar, FileText, Eye, CreditCard as Edit, Trash2, ExternalLink } from 'lucide-react';
 
 interface Patient {
   _id: string;
